@@ -25,15 +25,13 @@ interface ITeamSeasonQuery {
   teamName: string;
 }
 
-interface ITeamSeason {}
-
 export default class TeamSeasonService {
   knex: Knex;
   constructor(knex: Knex) {
     this.knex = knex;
   }
 
-  async getTeamSeasons(teamSeasons: ITeamSeasonQuery[]): Promise<ITeamSeason> {
+  async getTeamSeasons(teamSeasons: ITeamSeasonQuery[]): Promise<TeamSeason> {
     const latestMatches = await this.knex('team_season')
       .join(
         'team_season_match',
@@ -42,9 +40,12 @@ export default class TeamSeasonService {
         'team_season_match.team_season_id',
       )
       .select(
+        'team_season.season_name',
+        'team_season.team_name',
         'team_season_match.matches',
         'team_season_match.match_duration_minutes',
         'team_season_match.timezone',
+        'team_season_match.scraped_at',
       )
       .whereIn(
         ['team_season.season_name', 'team_season.team_name'],
@@ -53,8 +54,13 @@ export default class TeamSeasonService {
       .orderBy('team_season_match.created_at', 'desc')
       .first();
 
-    console.log(latestMatches);
-
-    return {};
+    return {
+      matchDuration: latestMatches.match_duration_minutes,
+      matches: latestMatches.matches,
+      seasonName: latestMatches.season_name,
+      teamName: latestMatches.team_name,
+      timezone: latestMatches.timezone,
+      timeScraped: latestMatches.scraped_at,
+    };
   }
 }

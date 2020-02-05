@@ -13,13 +13,14 @@ export default function ProcessUpdate(
   logger: Logger,
 ) {
   return flatMap(async (message: ICalendarUpdateMessage) => {
-
     logger.info('Processing Message');
 
-    const userTeamSeasons = await userService.getUserTeamSeasons(message.userId);
+    const userTeamSeasons = await userService.getUserTeamSeasons(
+      message.userId,
+    );
     const teamSeasons = await teamSeasonService.getTeamSeasons(userTeamSeasons);
 
-    logger.info('Processed Message');
+    logger.info('Processed Message', teamSeasons);
 
     return message;
   });
