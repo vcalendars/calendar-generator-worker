@@ -1,6 +1,7 @@
 import Knex = require('knex');
 import { SerialisedMatch } from '@vcalendars/models/raw';
 import { TeamSeason } from '@vcalendars/models/processed';
+import { deserialiseTeamSeason } from '@vcalendars/models/helpers';
 
 interface DBTeamSeason {
   team_season_id: number;
@@ -31,14 +32,22 @@ export default class TeamSeasonService {
     this.knex = knex;
   }
 
-  async getTeamSeasons(teamSeasons: ITeamSeasonQuery[]): Promise<TeamSeason> {
-    const latestMatches = await this.knex('team_season')
-      .join(
-        'team_season_match',
-        'team_season.team_season_id',
-        '=',
-        'team_season_match.team_season_id',
-      )
+  async getTeamSeasons(teamSeasons: ITeamSeasonQuery[]): Promise<TeamSeason[]> {
+    const classKnex = this.knex;
+    const latestMatchesForEachTeamSeason = await this.knex('team_season')
+      .join('team_season_match', function() {
+        this.on(
+          'team_season.team_season_id',
+          '=',
+          'team_season_match.team_season_id',
+        ).andOn(
+          'team_season_match.created_at',
+          '=',
+          classKnex.raw(
+            '(select min(created_at) from team_season_match where team_season_match.team_season_id = team_season.team_season_id)',
+          ),
+        );
+      })
       .select(
         'team_season.season_name',
         'team_season.team_name',
@@ -50,17 +59,17 @@ export default class TeamSeasonService {
       .whereIn(
         ['team_season.season_name', 'team_season.team_name'],
         teamSeasons.map(ts => [ts.seasonName, ts.teamName]),
-      )
-      .orderBy('team_season_match.created_at', 'desc')
-      .first();
+      );
 
-    return {
-      matchDuration: latestMatches.match_duration_minutes,
-      matches: latestMatches.matches,
-      seasonName: latestMatches.season_name,
-      teamName: latestMatches.team_name,
-      timezone: latestMatches.timezone,
-      timeScraped: latestMatches.scraped_at,
-    };
+    return latestMatchesForEachTeamSeason.map(latestMatches =>
+      deserialiseTeamSeason({
+        matchDuration: latestMatches.match_duration_minutes,
+        matches: latestMatches.matches,
+        seasonName: latestMatches.season_name,
+        teamName: latestMatches.team_name,
+        timezone: latestMatches.timezone,
+        timeScraped: latestMatches.scraped_at,
+      }),
+    );
   }
 }

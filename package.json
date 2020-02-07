@@ -29,7 +29,7 @@
   "dependencies": {
     "@danielemeryau/logger": "0.0.5",
     "@danielemeryau/simple-rabbitmq": "^0.1.1-envelope.2",
-    "@vcalendars/calendar-generator": "0.0.3",
+    "@vcalendars/calendar-generator": "0.1.0",
     "@vcalendars/models": "^0.3.1-namespaces.6",
     "knex": "^0.20.8",
     "mysql2": "^2.1.0",

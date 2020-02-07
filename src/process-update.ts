@@ -20,7 +20,14 @@ export default function ProcessUpdate(
     );
     const teamSeasons = await teamSeasonService.getTeamSeasons(userTeamSeasons);
 
-    logger.info('Processed Message', teamSeasons);
+    const calendar = await generateCalendarFromArray(teamSeasons, {
+      domain: 'vcalendars.demery.com.au',
+      name: 'VCalendars',
+      timezone: 'Australia/Adelaide',
+      created: message.timeChangeDetected,
+    });
+
+    logger.info('Processed Message', calendar);
 
     return message;
   });
