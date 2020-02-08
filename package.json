@@ -31,6 +31,7 @@
     "@danielemeryau/simple-rabbitmq": "^0.1.1-envelope.2",
     "@vcalendars/calendar-generator": "0.1.0",
     "@vcalendars/models": "^0.3.1-namespaces.6",
+    "aws-sdk": "^2.614.0",
     "knex": "^0.20.8",
     "mysql2": "^2.1.0",
     "rxjs": "^6.5.4"
