@@ -44,7 +44,7 @@ export default class TeamSeasonService {
           'team_season_match.created_at',
           '=',
           classKnex.raw(
-            '(select min(created_at) from team_season_match where team_season_match.team_season_id = team_season.team_season_id)',
+            '(select max(created_at) from team_season_match where team_season_match.team_season_id = team_season.team_season_id)',
           ),
         );
       })
