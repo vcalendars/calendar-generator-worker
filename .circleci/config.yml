@@ -43,7 +43,7 @@ jobs:
       - run:
           name: Setup Environment Variables
           command: |
-            REGISTRY=vcalendars/calendar-generator-worker
+            REGISTRY=teamest/calendar-generator-worker
             echo $REGISTRY
             echo "export REGISTRY=$REGISTRY" >> $BASH_ENV
             TAG=$CIRCLE_TAG
