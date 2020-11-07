@@ -1,6 +1,6 @@
 {
   "name": "calendar-generator-worker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Listens for season changed and user changed messages, regenerates calendars and pushes to S3",
   "main": "index.js",
   "scripts": {
