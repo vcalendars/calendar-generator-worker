@@ -10,30 +10,28 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vcalendars/calendar-generator-worker.git"
+    "url": "git+https://github.com/teamest-au/calendar-generator-worker.git"
   },
   "author": "Daniel Emery <danielremery@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vcalendars/calendar-generator-worker/issues"
+    "url": "https://github.com/teamest-au/calendar-generator-worker/issues"
   },
-  "homepage": "https://github.com/vcalendars/calendar-generator-worker#readme",
+  "homepage": "https://github.com/teamest-au/calendar-generator-worker#readme",
   "devDependencies": {
-    "@danielemeryau/prettier-config": "0.0.6",
-    "@types/amqplib": "^0.5.13",
-    "@types/node": "^13.7.0",
+    "@danielemeryau/prettier-config": "^0.0.6",
+    "@types/amqplib": "^0.5.16",
+    "@types/node": "^14.14.6",
     "dotenv": "^8.2.0",
-    "ts-node": "^8.6.2",
-    "typescript": "^3.7.5"
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.5"
   },
   "dependencies": {
-    "@danielemeryau/logger": "0.0.5",
-    "@danielemeryau/simple-rabbitmq": "^0.1.1-envelope.2",
-    "@vcalendars/calendar-generator": "0.1.0",
-    "@vcalendars/models": "^0.3.1-namespaces.6",
-    "aws-sdk": "^2.614.0",
-    "knex": "^0.20.8",
-    "mysql2": "^2.1.0",
-    "rxjs": "^6.5.4"
+    "@danielemeryau/logger": "^0.1.1",
+    "@danielemeryau/simple-rabbitmq": "^0.3.0",
+    "@teamest/calendar-generator": "^0.2.0",
+    "@teamest/internal-season-client": "^0.4.0",
+    "aws-sdk": "^2.787.0",
+    "rxjs": "^6.6.3"
   }
 }

@@ -1,9 +1,9 @@
-import { from, Observable } from 'rxjs';
-import { flatMap, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
 import Envelope from '@danielemeryau/simple-rabbitmq/dist/src/envelope';
 
-import { deserialiseChangedSeasonMessage } from '@vcalendars/models/helpers';
-import { SerialisedChangedSeasonMessage } from '@vcalendars/models/messages';
+import { MessageSerialisers } from '@teamest/models/helpers';
+import { SerialisedChangedSeasonMessage } from '@teamest/models/messages';
 
 import ICalendarUpdateMessage from './ICalendarUpdateMessage';
 import UserService from './external/user.service';
@@ -11,7 +11,7 @@ import UserService from './external/user.service';
 export default function processSeasonMessage(userService: UserService) {
   return flatMap((envelope: Envelope<SerialisedChangedSeasonMessage>) => {
     return new Observable<ICalendarUpdateMessage>(observer => {
-      const message = deserialiseChangedSeasonMessage(envelope.message);
+      const message = MessageSerialisers.deserialiseChangedSeasonMessage(envelope.message);
       const { teamName, seasonName, timeDetected } = message;
       userService
         .getUserIdsWithTeamSeason(teamName, seasonName)

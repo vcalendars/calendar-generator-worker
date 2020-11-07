@@ -1,4 +1,6 @@
-import Knex = require('knex');
+// import Knex = require('knex');
+
+import { InternalSeasonServiceTypes } from '@teamest/internal-season-client';
 
 export interface ITeamSeason {
   teamName: string;
@@ -6,10 +8,10 @@ export interface ITeamSeason {
 }
 
 export default class UserService {
-  knex: Knex;
-  constructor(knex: Knex) {
-    this.knex = knex;
-  }
+  // knex: Knex;
+  // constructor(knex: Knex) {
+  //   this.knex = knex;
+  // }
 
   async getUserIdsWithTeamSeason(
     teamName: string,
@@ -18,11 +20,12 @@ export default class UserService {
     return Promise.resolve([]);
   }
 
-  async getUserTeamSeasons(userId: string): Promise<ITeamSeason[]> {
+  async getUserTeamSeasons(userId: string): Promise<InternalSeasonServiceTypes.TeamSpecifier[]> {
     return Promise.resolve([
       {
-        teamName: 'Dateko',
+        competitionName: 'Volleyball SA Indoor',
         seasonName: 'Theb Mon / A',
+        teamName: 'Dateko',
       },
     ]);
   }

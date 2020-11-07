@@ -1,16 +1,16 @@
 import { flatMap } from 'rxjs/operators';
 import Logger from '@danielemeryau/logger';
 
-import { generateCalendarFromArray } from '@vcalendars/calendar-generator';
+import { generateCalendarFromArray } from '@teamest/calendar-generator';
+import { InternalSeasonServiceClient } from '@teamest/internal-season-client';
 
 import UserService from './external/user.service';
-import TeamSeasonService from './external/team_season.service';
 import ICalendarUpdateMessage from './ICalendarUpdateMessage';
 import s3Service from './s3-service';
 
 export default function ProcessUpdate(
   userService: UserService,
-  teamSeasonService: TeamSeasonService,
+  teamSeasonService: InternalSeasonServiceClient,
   logger: Logger,
 ) {
   return flatMap(async (message: ICalendarUpdateMessage) => {
@@ -18,9 +18,12 @@ export default function ProcessUpdate(
     const { userId, timeChangeDetected } = message;
 
     const userTeamSeasons = await userService.getUserTeamSeasons(userId);
-    const teamSeasons = await teamSeasonService.getTeamSeasons(userTeamSeasons);
+    
+    const teamSeasons = await teamSeasonService.GetSeasonsForTeam({
+      teamSpecifiers: userTeamSeasons,
+    });
 
-    const calendar = await generateCalendarFromArray(teamSeasons, {
+    const calendar = await generateCalendarFromArray(teamSeasons.matchingTeamSeasons, {
       domain: 'vcalendars.demery.com.au',
       name: 'VCalendars',
       timezone: 'Australia/Adelaide',

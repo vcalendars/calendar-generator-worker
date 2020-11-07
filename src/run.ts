@@ -1,16 +1,15 @@
-import Knex from 'knex';
 import { merge } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import Logger from '@danielemeryau/logger';
 import { Rabbit, observeRabbit } from '@danielemeryau/simple-rabbitmq';
 
+import { InternalSeasonServiceClient } from '@teamest/internal-season-client';
 import {
   SerialisedChangedSeasonMessage,
   SerialisedChangedUserMessage,
-} from '@vcalendars/models/messages';
+} from '@teamest/models/messages';
 
 import UserService from './external/user.service';
-import TeamSeasonService from './external/team_season.service';
 import processUserMessage from './process-user-message';
 import processSeasonMessage from './process-season-message';
 import processUpdate from './process-update';
@@ -25,23 +24,12 @@ async function initialise(logger: Logger) {
     },
     logger,
   );
-  const knex = Knex({
-    client: 'mysql2',
-    connection: {
-      host: process.env.MYSQL_HOST || 'localhost',
-      user: process.env.MYSQL_USER || 'dataworker',
-      password: process.env.MYSQL_PASS || 'dataworker',
-      database: process.env.MYSQL_DATABASE || 'season_data',
-    },
-    migrations: {
-      tableName: 'migrations',
-    },
-  });
-
   await rabbit.connect();
 
-  const userService = new UserService(knex);
-  const teamSeasonService = new TeamSeasonService(knex);
+  const INTERNAL_SEASON_API_URL = process.env.INTERNAL_SEASON_API_URL || 'http://localhost:9010';
+
+  const userService = new UserService();
+  const teamSeasonService = new InternalSeasonServiceClient(INTERNAL_SEASON_API_URL, 'calendar-generator-worker');
 
   return { rabbit, userService, teamSeasonService };
 }
